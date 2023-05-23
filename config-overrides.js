@@ -29,5 +29,7 @@ module.exports = function override(config, env) {
     warningsFilter: [/Failed to parse source map/],
   };
   config.output.path =  __dirname + '/docs'
+  config.output.publicPath =  './lego-pixel/'
+  
   return config;
 };
