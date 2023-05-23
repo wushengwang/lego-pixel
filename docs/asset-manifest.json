@@ -1,16 +1,20 @@
 {
   "files": {
-    "main.css": "/static/css/main.40535087.css",
-    "main.js": "/static/js/main.6f56d91e.js",
+    "main.css": "/static/css/main.5a71fa2d.css",
+    "main.js": "/static/js/main.c9f3eec9.js",
+    "static/js/703.a819d972.chunk.js": "/static/js/703.a819d972.chunk.js",
+    "static/js/598.e1e8327a.chunk.js": "/static/js/598.e1e8327a.chunk.js",
     "static/media/Termina-Bold.otf": "/static/media/Termina-Bold.3485b79d8fdde0912e9f.otf",
     "static/media/Termina-Light.otf": "/static/media/Termina-Light.68060e9a154312e5dbb4.otf",
     "static/media/Termina-mediums.otf": "/static/media/Termina-mediums.30f56d68b97605461463.otf",
     "index.html": "/index.html",
-    "main.40535087.css.map": "/static/css/main.40535087.css.map",
-    "main.6f56d91e.js.map": "/static/js/main.6f56d91e.js.map"
+    "main.5a71fa2d.css.map": "/static/css/main.5a71fa2d.css.map",
+    "main.c9f3eec9.js.map": "/static/js/main.c9f3eec9.js.map",
+    "703.a819d972.chunk.js.map": "/static/js/703.a819d972.chunk.js.map",
+    "598.e1e8327a.chunk.js.map": "/static/js/598.e1e8327a.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.40535087.css",
-    "static/js/main.6f56d91e.js"
+    "static/css/main.5a71fa2d.css",
+    "static/js/main.c9f3eec9.js"
   ]
 }

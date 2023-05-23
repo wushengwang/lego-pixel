@@ -10,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { getNearColor } from "./utils";
 import { TaskBtn } from "./task-btn";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 
 export default function Upload() {
   const cropperRef = useRef<HTMLImageElement>(null);
@@ -69,6 +71,22 @@ export default function Upload() {
     setX(arr);
     sety(x);
   }, [previewSrc, h, dd, ld]);
+
+  const xx = async () => {
+    const target = document.getElementById("pdf");
+    if (!target) {
+      return;
+    }
+    const canvas = await html2canvas(target, {
+      backgroundColor: "#FFF",
+      removeContainer: true,
+    });
+    const pdf = new jsPDF("p", "px", [1240, Math.round((h * 3) / 1754) * 1754]);
+
+    const pageData = canvas.toDataURL("image/jpeg", 1.0);
+    pdf.addImage(pageData, "JPEG", 20, 0, 1200, h * 3);
+    pdf.save("图纸.pdf");
+  };
 
   return (
     <section className="mt-10">
@@ -140,6 +158,9 @@ export default function Upload() {
         >
           切换高度
         </TaskBtn>
+        <TaskBtn className="ml-10" onClick={xx}>
+          下载说明
+        </TaskBtn>
         <div className="w-[200px] ml-10 text-center">
           <span>亮度</span>
           <Slider
@@ -180,23 +201,32 @@ export default function Upload() {
         </span>
         <span className="ml-10">高度：{h}</span>
       </div>
-      <ul className="flex gap-1 flex-wrap">
-        {Object.keys(y).map((i) => {
-          const color = y[i].color;
-          const num: number = y[i].num;
-          return (
-            <li key={i} className="inline-flex items-center flex-col">
-              <span
-                className="inline-block w-20 h-20"
-                style={{ background: color }}
-              ></span>
-              <span className="text-xcyan">{i}</span>
-              <span>{num}</span>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="text-center w-[1800px] mx-auto my-10">
+      <div id="pdf" className="w-[1800px] mx-auto">
+        <ul className="flex gap-1 flex-wrap">
+          <li className="inline-flex items-center flex-col">
+            <span
+              className="inline-block w-20 h-20"
+              style={{ background: "#fff" }}
+            ></span>
+            <span className="text-xcyan">色值编号</span>
+            <span className="text-xpink">所需数量</span>
+          </li>
+          {Object.keys(y).map((i) => {
+            const color = y[i].color;
+            const num: number = y[i].num;
+            return (
+              <li key={i} className="inline-flex items-center flex-col">
+                <span
+                  className="inline-block w-20 h-20"
+                  style={{ background: color }}
+                ></span>
+                <span className="text-xcyan">{i}</span>
+                <span className="text-xpink">{num}</span>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="text-center my-10">
           {x.map((i, ii) => {
             return (
               <div key={ii} className="p-0 m-0 h-10 flex justify-between">
@@ -204,15 +234,18 @@ export default function Upload() {
                   <span
                     key={j.colorNum + jj}
                     style={{
-                         background: j.color,
+                      background: j.color,
                     }}
                     className="w-10 h-10 inline-block leading-[40px] text-center rounded-full text-xs text-white"
-                  >{j.colorNum}</span>
+                  >
+                    {j.colorNum}
+                  </span>
                 ))}
               </div>
             );
           })}
         </div>
+      </div>
     </section>
   );
 }
