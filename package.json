@@ -1,0 +1,105 @@
+{
+  "name": "superior",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "start": "REACT_APP_G_ID=G-SRP35WLCMJ react-app-rewired start",
+    "dev": "npm run start",
+    "build": "REACT_APP_G_ID=G-7SKFYMR4MW react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^2.2.8",
+    "@coinbase/wallet-sdk": "3.4.0",
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@sentry/react": "^7.39.0",
+    "@sentry/tracing": "^7.39.0",
+    "@types/axios": "^0.14.0",
+    "@usedapp/core": "1.1.2",
+    "@walletconnect/web3-provider": "1.7.8",
+    "ahooks": "^3.7.0",
+    "axios": "^0.27.2",
+    "bignumber.js": "^9.1.0",
+    "classnames": "^2.3.1",
+    "copy-to-clipboard": "^3.3.2",
+    "cropperjs": "^1.5.12",
+    "current-device": "^0.10.2",
+    "delta-e": "^0.0.8",
+    "ethers": "5.6.9",
+    "eventemitter3": "^4.0.7",
+    "framer-motion": "^7.2.0",
+    "moment": "^2.29.4",
+    "qs": "^6.11.0",
+    "query-string": "^7.1.1",
+    "react": "^18.2.0",
+    "react-app-rewired": "^2.2.1",
+    "react-copy-to-clipboard": "^5.1.0",
+    "react-cropper": "^2.1.8",
+    "react-dom": "^18.2.0",
+    "react-infinite-scroll-component": "^6.1.0",
+    "react-router-dom": "^6.3.0",
+    "ua-parser-js": "^1.0.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/classnames": "^2.3.1",
+    "@types/delta-e": "^0.0.0",
+    "@types/eventemitter3": "^2.0.2",
+    "@types/jest": "^27.5.2",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^16.11.49",
+    "@types/qs": "^6.9.7",
+    "@types/query-string": "^6.3.0",
+    "@types/react": "^18.0.17",
+    "@types/react-copy-to-clipboard": "^5.0.4",
+    "@types/react-dom": "^18.0.6",
+    "@types/ua-parser-js": "^0.7.36",
+    "assert": "^2.0.0",
+    "autoprefixer": "^10.4.8",
+    "buffer": "^6.0.3",
+    "copy-webpack-plugin": "^11.0.0",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "postcss": "^8.4.16",
+    "process": "^0.11.10",
+    "react-scripts": "5.0.1",
+    "sass": "^1.54.4",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "svg-sprite-loader": "^6.0.11",
+    "tailwindcss": "^3.1.8",
+    "typescript": "^4.7.4",
+    "url": "^0.11.0",
+    "util": "^0.12.4"
+  },
+  "overrides": {
+    "ethereumjs-abi": "0.6.8"
+  },
+  "engines": {
+    "npm": ">=8.0.0"
+  }
+}
