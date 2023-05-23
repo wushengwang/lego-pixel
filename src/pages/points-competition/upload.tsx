@@ -196,6 +196,23 @@ export default function Upload() {
           );
         })}
       </ul>
+      <div className="text-center w-[1800px] mx-auto my-10">
+          {x.map((i, ii) => {
+            return (
+              <div key={ii} className="p-0 m-0 h-10 flex justify-between">
+                {i.map((j, jj) => (
+                  <span
+                    key={j.colorNum + jj}
+                    style={{
+                         background: j.color,
+                    }}
+                    className="w-10 h-10 inline-block leading-[40px] text-center rounded-full text-xs text-white"
+                  >{j.colorNum}</span>
+                ))}
+              </div>
+            );
+          })}
+        </div>
     </section>
   );
 }
