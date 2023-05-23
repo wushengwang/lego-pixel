@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.b72d4dc1.css",
+    "main.css": "/static/css/main.557a8fd5.css",
     "main.js": "/static/js/main.2fcd7258.js",
     "static/media/Termina-Bold.otf": "/static/media/Termina-Bold.3485b79d8fdde0912e9f.otf",
     "static/media/Termina-Light.otf": "/static/media/Termina-Light.68060e9a154312e5dbb4.otf",
     "static/media/Termina-mediums.otf": "/static/media/Termina-mediums.30f56d68b97605461463.otf",
     "index.html": "/index.html",
-    "main.b72d4dc1.css.map": "/static/css/main.b72d4dc1.css.map",
+    "main.557a8fd5.css.map": "/static/css/main.557a8fd5.css.map",
     "main.2fcd7258.js.map": "/static/js/main.2fcd7258.js.map"
   },
   "entrypoints": [
-    "static/css/main.b72d4dc1.css",
+    "static/css/main.557a8fd5.css",
     "static/js/main.2fcd7258.js"
   ]
 }
