@@ -28,6 +28,8 @@ body {
 #root {
   height: auto;
   font-family: "Termina";
+  height: 100vh;
+  overflow-y: scroll;
 }
 
 br {

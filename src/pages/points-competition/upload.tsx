@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import { useLocalStorageState } from "ahooks";
+import { useLocalStorageState, useResponsive, configResponsive } from "ahooks";
 import {
   Slider,
   SliderFilledTrack,
@@ -13,12 +13,18 @@ import { TaskBtn } from "./task-btn";
 import { jsPDF } from "jspdf";
 import html2canvas from "html2canvas";
 
+configResponsive({
+    md: 500,
+  });
+
+const Width = 300;
+
 export default function Upload() {
   const cropperRef = useRef<HTMLImageElement>(null);
   const [{ h }, setHeight] = useLocalStorageState<Record<string, number>>(
     `message-once-control`,
     {
-      defaultValue: { h: 400 },
+      defaultValue: { h: Width },
     }
   );
   const [imgSrc, setSrc] = useState("");
@@ -57,6 +63,8 @@ export default function Upload() {
     []
   );
 
+  const res = useResponsive()
+
   useEffect(() => {
     const canvas = document.querySelector<HTMLCanvasElement>("canvas#display");
     const ctx = canvas?.getContext?.("2d");
@@ -65,9 +73,9 @@ export default function Upload() {
       return;
     }
     console.log(previewSrc, h, dd, ld);
-    ctx.clearRect(0, 0, 400, h);
-    ctx.drawImage(image, 0, 0, 400, h);
-    const { arr, x } = ps(ctx, 400, h, dd, ld);
+    ctx.clearRect(0, 0, Width, h);
+    ctx.drawImage(image, 0, 0, Width, h);
+    const { arr, x } = ps(ctx, Width, h, dd, ld);
     setX(arr);
     sety(x);
   }, [previewSrc, h, dd, ld]);
@@ -81,15 +89,15 @@ export default function Upload() {
       backgroundColor: "#FFF",
       removeContainer: true,
     });
-    const pdf = new jsPDF("p", "px", [1240, Math.round((h * 3) / 1754) * 1754]);
-
-    const pageData = canvas.toDataURL("image/jpeg", 1.0);
-    pdf.addImage(pageData, "JPEG", 20, 0, 1200, h * 3);
+    const pdfH = Math.round(h / Width) * 1800 + 600
+    const pdf = new jsPDF("p", "px", [1900, pdfH]);
+    const pageData = canvas.toDataURL("image/jpeg", 1);
+    pdf.addImage(pageData, "JPEG", 50, 0, 1800, pdfH);
     pdf.save("图纸.pdf");
   };
 
   return (
-    <section className="mt-10">
+    <section className="pt-10">
       <input
         className="hidden"
         type="file"
@@ -97,61 +105,12 @@ export default function Upload() {
         id="imgReader"
         onChange={loadingImg}
       />
-      <div style={{ height: h }} className="w-full] flex justify-center">
-        <div className="w-[400px] h-full mx-4">
-          <Cropper
-            src={imgSrc}
-            style={{ height: h, width: 400, background: "#fff" }}
-            aspectRatio={400 / h}
-            guides
-            crop={onCrop}
-            ref={cropperRef}
-          />
-        </div>
-        <div className="text-center w-[400px] h-full mx-4">
-          {previewSrc ? (
-            <img
-              id="sss"
-              className="w-full h-full inline-block"
-              src={previewSrc}
-              alt=""
-            />
-          ) : null}
-        </div>
-        <div className="text-center w-[400px] h-full mx-4">
-          {x.map((i, ii) => {
-            return (
-              <div key={ii} className="p-0 m-0 h-1">
-                {i.map((j, jj) => (
-                  <span
-                    key={j.colorNum + jj}
-                    className="inline-block"
-                    style={{
-                      background: j.color,
-                      width: 4,
-                      height: 4,
-                      borderRadius: 4,
-                    }}
-                  ></span>
-                ))}
-              </div>
-            );
-          })}
-        </div>
-        <canvas
-          width={400}
-          height={h}
-          id="display"
-          className="mx-4 fixed left-[-4000px]"
-        ></canvas>
-      </div>
-
-      <div className="flex justify-center items-center my-10">
+      <div className="flex h-[60px] justify-center items-center my-10">
         <TaskBtn onClick={onSelect}>选择图片</TaskBtn>
         <TaskBtn
           className="ml-10"
           onClick={() => {
-            setHeight({ h: h === 1200 ? 400 : 1200 });
+            setHeight({ h: h === Width ? Width * 3 : Width });
             // eslint-disable-next-line no-restricted-globals
             location.reload();
           }}
@@ -161,7 +120,9 @@ export default function Upload() {
         <TaskBtn className="ml-10" onClick={xx}>
           下载说明
         </TaskBtn>
-        <div className="w-[200px] ml-10 text-center">
+      </div>
+      <div className="flex h-12 justify-center items-center my-10">
+        <div className="w-[150px] text-center">
           <span>亮度</span>
           <Slider
             aria-label="slider-ex-1"
@@ -178,7 +139,8 @@ export default function Upload() {
             <SliderThumb />
           </Slider>
         </div>
-        <div className="w-[200px] ml-10 text-center">
+
+        <div className="w-[150px] ml-10 text-center">
           <span>对比度</span>
           <Slider
             aria-label="slider-ex-1"
@@ -195,57 +157,113 @@ export default function Upload() {
             <SliderThumb />
           </Slider>
         </div>
-        <span className="ml-10">总颜色：{Object.keys(x).length}</span>
+      </div>
+      <div className="flex justify-center h-6 items-center my-10">
+        <span>总颜色：{Object.keys(x).length}</span>
         <span className="ml-10">
           总颗粒：{Object.values(y).reduce((a, b) => a + b.num, 0)}
         </span>
         <span className="ml-10">高度：{h}</span>
       </div>
-      <div id="pdf" className="w-[1800px] mx-auto">
-        <ul className="flex gap-1 flex-wrap">
-          <li className="inline-flex items-center flex-col">
-            <span
-              className="inline-block w-20 h-20"
-              style={{ background: "#fff" }}
-            ></span>
-            <span className="text-xcyan">色值编号</span>
-            <span className="text-xpink">所需数量</span>
-          </li>
-          {Object.keys(y).map((i) => {
-            const color = y[i].color;
-            const num: number = y[i].num;
-            return (
-              <li key={i} className="inline-flex items-center flex-col">
-                <span
-                  className="inline-block w-20 h-20"
-                  style={{ background: color }}
-                ></span>
-                <span className="text-xcyan">{i}</span>
-                <span className="text-xpink">{num}</span>
-              </li>
-            );
-          })}
-        </ul>
-        <div className="text-center my-10">
+      <div style={{height: res.md ? h + 50 : h*2 + 50}} className="w-full overflow-x-hidden flex flex-col md:flex-row items-center justify-center">
+        <div style={{ width: Width, height: h }} className="">
+          <Cropper
+            src={imgSrc}
+            style={{ height: h, width: Width, background: "#fff" }}
+            aspectRatio={Width / h}
+            guides
+            crop={onCrop}
+            ref={cropperRef}
+          />
+        </div>
+        <div style={{ width: Width, height: h }} className="text-center">
           {x.map((i, ii) => {
             return (
-              <div key={ii} className="p-0 m-0 h-10 flex justify-between">
+              <div key={ii} className="p-0 m-0" style={{ height: Width / 45 }}>
                 {i.map((j, jj) => (
                   <span
                     key={j.colorNum + jj}
+                    className="inline-block"
                     style={{
                       background: j.color,
+                      width: Width / 45,
+                      height: Width / 45,
+                      borderRadius: Width / 45,
                     }}
-                    className="w-10 h-10 inline-block leading-[40px] text-center rounded-full text-xs text-white"
-                  >
-                    {j.colorNum}
-                  </span>
+                  ></span>
                 ))}
               </div>
             );
           })}
         </div>
       </div>
+
+      <div className="w-full overflow-auto mx-auto">
+        <div id="pdf" className="w-[1800px] h-auto mx-auto">
+          <ul className="flex gap-1 flex-wrap">
+            <li className="inline-flex items-center flex-col">
+              <span
+                className="inline-block w-20 h-20"
+                style={{ background: "#fff" }}
+              ></span>
+              <span className="text-xcyan">色值编号</span>
+              <span className="text-xpink">所需数量</span>
+            </li>
+            {Object.keys(y).map((i) => {
+              const color = y[i].color;
+              const num: number = y[i].num;
+              return (
+                <li key={i} className="inline-flex items-center flex-col">
+                  <span
+                    className="inline-block w-20 h-20"
+                    style={{ background: color }}
+                  ></span>
+                  <span className="text-xcyan">{i}</span>
+                  <span className="text-xpink">{num}</span>
+                </li>
+              );
+            })}
+          </ul>
+          <div className="text-center my-10">
+            {x.map((i, ii) => {
+              return (
+                <div key={ii} className="p-0 m-0 h-10 flex justify-between">
+                  {i.map((j, jj) => (
+                    <span
+                      key={j.colorNum + jj}
+                      style={{
+                        background: j.color,
+                      }}
+                      className="w-10 h-10 inline-block leading-[40px] text-center rounded-full text-xs text-white"
+                    >
+                      {j.colorNum}
+                    </span>
+                  ))}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+      <div
+        style={{ width: Width }}
+        className="text-center h-full mx-4 fixed left-[-4000px]"
+      >
+        {previewSrc ? (
+          <img
+            id="sss"
+            className="w-full h-full inline-block"
+            src={previewSrc}
+            alt=""
+          />
+        ) : null}
+      </div>
+      <canvas
+        width={Width}
+        height={h}
+        id="display"
+        className="mx-4 fixed left-[-4000px]"
+      ></canvas>
     </section>
   );
 }
