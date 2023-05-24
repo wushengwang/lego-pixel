@@ -89,7 +89,7 @@ export default function Upload() {
       backgroundColor: "#FFF",
       removeContainer: true,
     });
-    const pdfH = Math.round(h / Width) * 1800 + 600
+    const pdfH = target.clientHeight / target.clientWidth * 1800
     const pdf = new jsPDF("p", "px", [1900, pdfH]);
     const pageData = canvas.toDataURL("image/jpeg", 1);
     pdf.addImage(pageData, "JPEG", 50, 0, 1800, pdfH);
