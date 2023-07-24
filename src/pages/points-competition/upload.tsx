@@ -17,7 +17,10 @@ configResponsive({
     md: 500,
   });
 
-const Width = 300;
+const Step = 10
+const Pixcel = 48
+const Width = Pixcel * Step;
+
 
 export default function Upload() {
   const cropperRef = useRef<HTMLImageElement>(null);
@@ -31,7 +34,7 @@ export default function Upload() {
   const [ld, setL] = useState(0);
   const [dd, setD] = useState(1);
   const [x, setX] = useState<{ colorNum: string; color: string }[][]>([]);
-  const [y, sety] = useState<Record<string, { num: number; color: string }>>(
+  const [y, sety] = useState<Record<string, { num: number; color: string, colorDesc: string, enColorDesc: string }>>(
     {}
   );
   const [previewSrc, setPreviewSrc] = useState("");
@@ -80,21 +83,7 @@ export default function Upload() {
     sety(x);
   }, [previewSrc, h, dd, ld]);
 
-  const xx = async () => {
-    const target = document.getElementById("pdf");
-    if (!target) {
-      return;
-    }
-    const canvas = await html2canvas(target, {
-      backgroundColor: "#FFF",
-      removeContainer: true,
-    });
-    const pdfH = target.clientHeight / target.clientWidth * 1800
-    const pdf = new jsPDF("p", "px", [1900, pdfH]);
-    const pageData = canvas.toDataURL("image/jpeg", 1);
-    pdf.addImage(pageData, "JPEG", 50, 0, 1800, pdfH);
-    pdf.save("图纸.pdf");
-  };
+  
 
   return (
     <section className="pt-10">
@@ -110,14 +99,34 @@ export default function Upload() {
         <TaskBtn
           className="ml-10"
           onClick={() => {
-            setHeight({ h: h === Width ? Width * 3 : Width });
+            setHeight({ h: Width });
             // eslint-disable-next-line no-restricted-globals
             location.reload();
           }}
         >
-          切换高度
+         1*1
         </TaskBtn>
-        <TaskBtn className="ml-10" onClick={xx}>
+        <TaskBtn
+          className="ml-10"
+          onClick={() => {
+            setHeight({ h: Width * 2});
+            // eslint-disable-next-line no-restricted-globals
+            location.reload();
+          }}
+        >
+         1*2
+        </TaskBtn>
+        <TaskBtn
+          className="ml-10"
+          onClick={() => {
+            setHeight({ h:  Width * 3  });
+            // eslint-disable-next-line no-restricted-globals
+            location.reload();
+          }}
+        >
+          1*3
+        </TaskBtn>
+        <TaskBtn className="ml-10" onClick={savePdf}>
           下载说明
         </TaskBtn>
       </div>
@@ -159,9 +168,9 @@ export default function Upload() {
         </div>
       </div>
       <div className="flex justify-center h-6 items-center my-10">
-        <span>总颜色：{Object.keys(x).length}</span>
+        <span>总颜色：{Object.keys(y).length}</span>
         <span className="ml-10">
-          总颗粒：{Object.values(y).reduce((a, b) => a + b.num, 0)}
+          总颗粒：{Object.keys(y).map((i) =>  y[i].num).reduce((a, b) => a + b, 0)}
         </span>
         <span className="ml-10">高度：{h}</span>
       </div>
@@ -179,16 +188,16 @@ export default function Upload() {
         <div style={{ width: Width, height: h }} className="text-center">
           {x.map((i, ii) => {
             return (
-              <div key={ii} className="p-0 m-0" style={{ height: Width / 45 }}>
+              <div key={ii} className="p-0 m-0" style={{ height: Width / Pixcel }}>
                 {i.map((j, jj) => (
                   <span
                     key={j.colorNum + jj}
                     className="inline-block"
                     style={{
                       background: j.color,
-                      width: Width / 45,
-                      height: Width / 45,
-                      borderRadius: Width / 45,
+                      width: Width / Pixcel,
+                      height: Width / Pixcel,
+                      borderRadius: Width / Pixcel,
                     }}
                   ></span>
                 ))}
@@ -207,6 +216,8 @@ export default function Upload() {
                 style={{ background: "#fff" }}
               ></span>
               <span className="text-xcyan">色值编号</span>
+              <span className="text-xpink">色值名称-en</span>
+              <span className="text-xcyan">色值名称-cn</span>
               <span className="text-xpink">所需数量</span>
             </li>
             {Object.keys(y).map((i) => {
@@ -219,6 +230,8 @@ export default function Upload() {
                     style={{ background: color }}
                   ></span>
                   <span className="text-xcyan">{i}</span>
+                  <span className="text-xpink">{y[i].enColorDesc}</span>
+                  <span className="text-xcyan">{y[i].colorDesc}</span>
                   <span className="text-xpink">{num}</span>
                 </li>
               );
@@ -227,12 +240,14 @@ export default function Upload() {
           <div className="text-center my-10">
             {x.map((i, ii) => {
               return (
-                <div key={ii} className="p-0 m-0 h-10 flex justify-between">
+                <div key={ii} style={{marginBottom: !((ii/10 + 1) % 16) ? 10 : 0}} className="p-0 m-0 h-10 flex justify-between">
                   {i.map((j, jj) => (
                     <span
                       key={j.colorNum + jj}
                       style={{
                         background: j.color,
+                        marginRight: !((jj+1)% 16) ? 10 : 0,
+                        
                       }}
                       className="w-10 h-10 inline-block leading-[40px] text-center rounded-full text-xs text-white"
                     >
@@ -259,8 +274,8 @@ export default function Upload() {
         ) : null}
       </div>
       <canvas
-        width={Width}
-        height={h}
+        width={Width + 100}
+        height={h + 100}
         id="display"
         className="mx-4 fixed left-[-4000px]"
       ></canvas>
@@ -276,28 +291,26 @@ const ps = (
   l: number
 ) => {
   let arr: { colorNum: string; color: string }[][] = [];
-  const poly = Math.round(width / 45);
-  let x: Record<string, { num: number; color: string }> = {};
+  const poly = Step;
+  let x: Record<string, { num: number; color: string, colorDesc: string, enColorDesc: string }> = {};
   //取得图像数据
   const canvasData = ctx.getImageData(0, 0, width, height);
   let area = {};
-  let count = 0;
   for (let x = 0; x < height; x += poly) {
-    count++;
+    console.log(x, height, poly)
     for (let y = 0; y < width; y += poly) {
       area = {
-        w: y + poly > width ? parseInt(`${width % poly}`) : poly,
-        h: count * poly > height ? parseInt(`${height % poly}`) : poly,
+        w: poly,
+        h: poly,
       };
       const idx = (y + x * width) * 4;
       const { colorNum, color } = averageColors(idx, area);
-      if (!arr[count]) {
-        arr[count] = [];
+      if (!arr[x]) {
+        arr[x] = [];
       }
-      arr[count].push({ colorNum, color });
+      arr[x].push({ colorNum, color });
     }
   }
-  console.log(JSON.stringify(arr));
 
   ctx.putImageData(canvasData, 0, 0);
 
@@ -306,13 +319,13 @@ const ps = (
     let aveG = aveColors(idx + 1, area);
     let aveB = aveColors(idx + 2, area);
 
-    const [{ r, g, b }, colorNum, color] = getNearColor({
+    const [{ r, g, b }, colorNum, color, colorDesc, enColorDesc] = getNearColor({
       r: aveR,
       g: aveG,
       b: aveB,
     });
     const key = colorNum || `x_${r}_${g}_${b}`;
-    x[key] = x[key] ? { color, num: x[key].num + 1 } : { num: 1, color };
+    x[key] = x[key] ? { color, num: x[key].num + 1 ,colorDesc, enColorDesc} : { num: 1, color, colorDesc, enColorDesc };
     fullColors(idx, { aveR: r, aveG: g, aveB: b }, area);
     return { color, colorNum };
   }
@@ -341,3 +354,21 @@ const ps = (
   }
   return { arr, x };
 };
+
+
+const savePdf = async () => {
+  const target = document.getElementById("pdf");
+  if (!target) {
+    return;
+  }
+  const canvas = await html2canvas(target, {
+    backgroundColor: "#FFF",
+    removeContainer: true,
+  });
+  const pdfH = target.clientHeight / target.clientWidth * 1800
+  const pdf = new jsPDF("p", "px", [1900, pdfH + 200]);
+  const pageData = canvas.toDataURL("image/jpeg", 1);
+  pdf.addImage(pageData, "JPEG", 50, 0, 1800, pdfH);
+  pdf.save("图纸.pdf");
+};
+
