@@ -164,12 +164,12 @@ export const LegoColors = [
     colorNum: "102",
     enDesc: "Medium Blue",
   },
-  {
-    colorDesc: "橘色",
-    color: "#D67923",
-    colorNum: "106",
-    enDesc: "Bright Orange",
-  },
+//   {
+//     colorDesc: "橘色",
+//     color: "#D67923",
+//     colorNum: "106",
+//     enDesc: "Bright Orange",
+//   },
   {
     colorDesc: "柠檬绿色",
     color: "#A5CA18",
@@ -340,5 +340,34 @@ export const LegoColors = [
     enDesc: "Vibrant Coral",
   },
 ];
-
+const xxxx = {
+    31207: {
+        Bright_Pink: 158,
+        White: 550,
+        Light_Nougat: 370,
+        Bright_Light_Orange: 370,
+        Dark_Turquoise: 370,
+        Dark_Pink: 370
+    },
+    31197: {
+        Magenta: 46,
+        Medium_Azure: 587,
+        Dark_Pink: 587,
+        Yellow: 587,
+        Bright_Pink: 587,
+        Dark_Bluish_Gray: 131,
+        Blank: 629 
+    },
+    31203: {
+        Bright_Yellowish_Green: 1060,
+        Tan: 725,
+        Vibrant_Coral: 601,
+        Orange: 601,
+        Bright_Green: 601,
+        Bright_Light_Orange: 599,
+        Dark_Turquoise: 1879,
+        Dark_Blue: 393,
+        Medium_Azure: 1607
+    }
+}
 
