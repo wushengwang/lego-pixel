@@ -267,6 +267,12 @@ export const LegoColors = [
     enDesc: "Cool Yellow",
   },
   {
+    colorDesc: "淡黃色",
+    color: "#E4CD9E",
+    colorNum: "371",
+    enDesc: "Tan",
+  },
+  {
     colorDesc: "深紫色",
     color: "#441A91",
     colorNum: "268",
@@ -334,3 +340,5 @@ export const LegoColors = [
     enDesc: "Vibrant Coral",
   },
 ];
+
+

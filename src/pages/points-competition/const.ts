@@ -113,3 +113,4 @@ export const fullSolidColor = [
   { colorDesc: "Medium Brown", color: "755945", colorNum: "370" },
   { colorDesc: "Warm Tan", color: "CCA373", colorNum: "371" },
 ];
+

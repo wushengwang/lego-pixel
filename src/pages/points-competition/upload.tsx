@@ -31,8 +31,10 @@ export default function Upload() {
     }
   );
   const [imgSrc, setSrc] = useState("");
-  const [ld, setL] = useState(0);
-  const [dd, setD] = useState(1);
+  const [ld, setL] = useState(0.2);
+  const [dd, setD] = useState(0.2);
+  const [b, setB] = useState(0.2);
+  const [hue, setHue] = useState(0);
   const [x, setX] = useState<{ colorNum: string; color: string }[][]>([]);
   const [y, sety] = useState<Record<string, { num: number; color: string, colorDesc: string, enColorDesc: string }>>(
     {}
@@ -75,13 +77,13 @@ export default function Upload() {
     if (!ctx || !image || !canvas) {
       return;
     }
-    console.log(previewSrc, h, dd, ld);
+    ctx.filter=`saturate(${b * 5}) hue-rotate(${hue * 36}deg) brightness(${ld *5}) contrast(${dd * 5})`
     ctx.clearRect(0, 0, Width, h);
     ctx.drawImage(image, 0, 0, Width, h);
-    const { arr, x } = ps(ctx, Width, h, dd, ld);
+    const { arr, x } = ps(ctx, Width, h);
     setX(arr);
     sety(x);
-  }, [previewSrc, h, dd, ld]);
+  }, [previewSrc, h, dd, ld, b, hue]);
 
   
 
@@ -130,17 +132,17 @@ export default function Upload() {
           下载说明
         </TaskBtn>
       </div>
-      <div className="flex h-12 justify-center items-center my-10">
+      <div className="flex h-12 justify-center items-center gap-x-10 my-10">
         <div className="w-[150px] text-center">
           <span>亮度</span>
           <Slider
             aria-label="slider-ex-1"
-            min={-100}
-            max={100}
-            step={1}
+            min={0}
+            max={1}
+            step={0.01}
             value={ld}
             onChange={setL}
-            defaultValue={0}
+            defaultValue={0.2}
           >
             <SliderTrack>
               <SliderFilledTrack />
@@ -149,6 +151,41 @@ export default function Upload() {
           </Slider>
         </div>
 
+        <div className="w-[150px] text-center">
+          <span>饱和度</span>
+          <Slider
+            aria-label="slider-ex-1"
+            min={0}
+            max={1}
+            step={0.01}
+            value={b}
+            onChange={setB}
+            defaultValue={0.2}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+        </div>
+        <div className="w-[150px] text-center">
+          <span>色调</span>
+          <Slider
+            aria-label="slider-ex-1"
+            min={0}
+            max={1}
+            step={0.01}
+            value={hue}
+            onChange={setHue}
+            defaultValue={0}
+          >
+            <SliderTrack>
+              <SliderFilledTrack />
+            </SliderTrack>
+            <SliderThumb />
+          </Slider>
+        </div>
+        
         <div className="w-[150px] ml-10 text-center">
           <span>对比度</span>
           <Slider
@@ -157,8 +194,8 @@ export default function Upload() {
             step={0.01}
             onChange={setD}
             min={0}
-            max={2}
-            defaultValue={1}
+            max={1}
+            defaultValue={0.2}
           >
             <SliderTrack>
               <SliderFilledTrack />
@@ -287,8 +324,6 @@ const ps = (
   ctx: CanvasRenderingContext2D,
   width: number,
   height: number,
-  d: number,
-  l: number
 ) => {
   let arr: { colorNum: string; color: string }[][] = [];
   const poly = Step;
@@ -339,9 +374,10 @@ const ps = (
       }
     }
     return (
-      Math.floor(Math.min((total / (area.w * area.h)) * d + l, 255) / 25) * 25
+      Math.ceil(Math.min((total / (area.w * area.h)), 255) / 25) * 25
     );
   }
+
 
   function fullColors(idx: number, rgb: any, area: any) {
     for (let i = 0; i < area.h; i++) {
