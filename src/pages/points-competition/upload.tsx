@@ -77,7 +77,7 @@ export default function Upload() {
     if (!ctx || !image || !canvas) {
       return;
     }
-    ctx.filter=`saturate(${b * 5}) hue-rotate(${hue * 36}deg) brightness(${ld *5}) contrast(${dd * 5})`
+    ctx.filter=`saturate(${b * 5}) hue-rotate(${hue * 144}deg) brightness(${ld *5}) contrast(${dd * 5})`
     ctx.clearRect(0, 0, Width, h);
     ctx.drawImage(image, 0, 0, Width, h);
     const { arr, x } = ps(ctx, Width, h);
@@ -133,6 +133,12 @@ export default function Upload() {
         </TaskBtn>
       </div>
       <div className="flex h-12 justify-center items-center gap-x-10 my-10">
+        <span className="cur-pointer" onClick={() => {
+            setL(0.2);
+            setD(0.2);
+            setB(0.2);
+            setHue(0);
+        }}>reset</span>
         <div className="w-[150px] text-center">
           <span>亮度</span>
           <Slider
