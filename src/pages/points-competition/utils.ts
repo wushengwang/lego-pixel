@@ -386,4 +386,20 @@ const xxxx = {
     Orange: 2,
     Reddish_Brown: 250,
   },
+  21226: {
+    Medium_Nougat: 281,
+    Orange:133,
+    Reddish_Brown: 307,
+    Tan: 241
+  },
+  31204: {
+    Nougat: 258,
+    Medium_Nougat: 182,
+    Reddish_Brown: 233,
+    Medium_Blue: 230,
+    Dark_Red: 339,
+    Dark_Orange: 179,
+    
+  }
+  
 };

@@ -18,7 +18,7 @@ configResponsive({
   });
 
 const Step = 10
-const Pixcel = 48
+const Pixcel = 60
 const Width = Pixcel * Step;
 
 
